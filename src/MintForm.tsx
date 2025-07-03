@@ -28,7 +28,8 @@ const mintAsset = async (asset: string, address: string) => {
     });
 
     if (!response.ok) {
-        throw new Error('Faucet request failed: ' + response.statusText);
+        let obj = await response.json();
+        throw new Error('Faucet request failed: ' + (obj.error || 'Unknown error'));
     }
 
     return response.json();
@@ -54,11 +55,11 @@ export default function MintForm() {
         try {
             setLoading(true);
             const res = await mintAsset(asset, address);
-            setResult(`✅ Success: ${JSON.stringify(res)}`);
+            setResult(`✅ Success: ${JSON.stringify(res.message)}`);
         } catch (err: any) {
             setResult(`❌ Error: ${err.message}`);
         } finally {
-            setTimeout(() => setResult(null), 2000);
+            setTimeout(() => setResult(null), 6000);
             setLoading(false);
         }
     };
